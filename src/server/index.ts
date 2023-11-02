@@ -63,14 +63,13 @@ app.post('/checkout', async (_, res: Response) => {
         },
       ],
       automatic_tax: {enabled: true},
-      phone_number_collection: {enabled: false},
+      phone_number_collection: {enabled: true},
       mode: 'payment',
       allow_promotion_codes: true,
-      return_url: 'http://localhost:4242?success=true',
-      shipping_address_collection: {allowed_countries: ['CA']},
+      return_url: 'http://localhost:5173/success',
+      shipping_address_collection: {allowed_countries: ['CA', 'US']},
     });
     lastCheckoutSession = checkout.id;
-
 
     res.send({clientSecret: checkout.client_secret});
   }
