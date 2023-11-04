@@ -5,7 +5,7 @@ import Stripe from 'stripe';
 
 export const app = express();
 
-const stripe = new Stripe('sk_test_51HcCgbBaAnoFOnBJLIWYusaC07VI6LxciZzF6nHNFpD2d63mXulCM96bG6tT9o4VSZSXVwUipf4IwNI7xeD2KqVd00E1Ao23Du', {
+const stripe = new Stripe(import.meta.env.VITE_STRIPE_SECRET_KEY, {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   apiVersion: '2023-10-16; custom_checkout_beta=v1',
@@ -39,27 +39,37 @@ app.post('/checkout', async (_, res: Response) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'product name',
-              description: 'product description',
+              name: 'Product A',
+              description: 'This is a taxable product',
               tax_code: 'txcd_10000000',
             },
             tax_behavior: 'exclusive',
             unit_amount: 900,
           },
           quantity: 3,
+          adjustable_quantity: {
+            enabled: true,
+            minimum: 1,
+            maximum: 10,
+          },
         },
         {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'product name',
-              description: 'product description',
+              name: 'Product B',
+              description: 'This is a non-taxable product',
               tax_code: 'txcd_00000000',
             },
             tax_behavior: 'exclusive',
             unit_amount: 1000,
           },
-          quantity: 3,
+          quantity: 2,
+          adjustable_quantity: {
+            enabled: true,
+            minimum: 1,
+            maximum: 10,
+          },
         },
       ],
       automatic_tax: {enabled: true},
@@ -68,6 +78,53 @@ app.post('/checkout', async (_, res: Response) => {
       allow_promotion_codes: true,
       return_url: 'http://localhost:5173/success',
       shipping_address_collection: {allowed_countries: ['CA', 'US']},
+      billing_address_collection: 'required',
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 0,
+              currency: 'usd',
+            },
+            display_name: 'Free shipping',
+            tax_behavior: 'exclusive',
+            tax_code: 'txcd_92010001',
+            delivery_estimate: {
+              minimum: {
+                unit: 'business_day',
+                value: 5,
+              },
+              maximum: {
+                unit: 'business_day',
+                value: 7,
+              },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 1500,
+              currency: 'usd',
+            },
+            display_name: 'Next day air',
+            tax_behavior: 'exclusive',
+            tax_code: 'txcd_92010001',
+            delivery_estimate: {
+              minimum: {
+                unit: 'business_day',
+                value: 1,
+              },
+              maximum: {
+                unit: 'business_day',
+                value: 1,
+              },
+            },
+          },
+        },
+      ],
     });
     lastCheckoutSession = checkout.id;
 

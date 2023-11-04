@@ -21,12 +21,30 @@ const PromotionCodes = () => {
   };
 
   return (
-    <div>
-      <input type="text" value={draft} onChange={handleChange} />
-      <button disabled={loading} onClick={handleSubmit}>
-        Apply
-      </button>
-      <button onClick={handleRemove}>Remove</button>
+    <div className="space-y-2">
+      <input
+        type="text"
+        value={draft}
+        onChange={handleChange}
+        className="input input-bordered w-full max-w-xs"
+        placeholder="Enter code"
+      />
+
+      <div className="flex justify-end space-x-2">
+        <button
+          disabled={loading}
+          onClick={handleSubmit}
+          className={`btn btn-xs btn-outline ${
+            loading ? 'btn-disabled' : 'btn-primary'
+          }`}
+        >
+          {loading ? 'Applying...' : 'Apply'}
+        </button>
+
+        <button onClick={handleRemove} className="btn btn-xs btn-outline">
+          Remove
+        </button>
+      </div>
     </div>
   );
 };

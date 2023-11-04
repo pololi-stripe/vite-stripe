@@ -3,12 +3,31 @@ import {loadStripe} from '@stripe/stripe-js';
 import {CustomCheckoutProvider} from '@stripe/react-stripe-js';
 import CheckoutPage from './CheckoutPage';
 
-const stripe = loadStripe(
-  'pk_test_51HcCgbBaAnoFOnBJNdbA1GMEs0C1yJFyBkBdsCVu2Z7qLNIZfGPFLOcLKmMOAZKc8fq19iNWK8qjrDrauAej5VmQ00yHSnW8iG',
-  {
-    betas: ['custom_checkout_beta_1'],
-  }
-);
+const Loading = () => {
+  return (
+    <div className="h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-800">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-12 h-12 animate-spin mb-4 text-primary"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+        />
+      </svg>
+      <h1 className="text-4xl font-bold">Loading...</h1>
+    </div>
+  );
+};
+
+const stripe = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY as string, {
+  betas: ['custom_checkout_beta_1'],
+});
 
 function App() {
   const [clientSecret, setClientSecret] = useState(null);
@@ -34,7 +53,7 @@ function App() {
       </CustomCheckoutProvider>
     );
   } else {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 }
 

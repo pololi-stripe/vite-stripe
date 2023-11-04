@@ -1,16 +1,19 @@
 import {useCustomCheckout} from '@stripe/react-stripe-js';
 
 const PayButton = () => {
-  const {confirm, canConfirm, confirmationRequirements} = useCustomCheckout();
-  const requirements =
-    confirmationRequirements.length > 0
-      ? `(requires ${confirmationRequirements.join(', ')})`
-      : '';
+  const {confirm, canConfirm} = useCustomCheckout();
 
-  const handleConfirm = () => confirm({return_url: 'http://localhost:4242'});
+  const handleConfirm = () =>
+    confirm().then(
+      () => (window.location.href = `${window.location.origin}/success`)
+    );
   return (
-    <button disabled={!canConfirm} onClick={handleConfirm}>
-      Pay {requirements}
+    <button
+      disabled={!canConfirm}
+      onClick={handleConfirm}
+      className="btn btn-wide btn-primary"
+    >
+      Pay
     </button>
   );
 };

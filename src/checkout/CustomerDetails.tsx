@@ -11,19 +11,27 @@ const CustomerDetails = () => {
     updateEmail(e.target.value);
 
   return (
-    <div>
-      <div>Phone number</div>
-      <div>
-        <input
-          type="text"
-          value={phoneNumber || ''}
-          onChange={handlePhoneNumberChange}
-        />
-      </div>
-      <div>Email</div>
-      <div>
-        <input type="text" value={email || ''} onChange={handleEmailChange} />
-      </div>
+    <div className="form-control w-full max-w-xs">
+      <label className="label">
+        <span className="label-text">Phone Number</span>
+      </label>
+      <input
+        type="tel"
+        placeholder="123-456-7890"
+        className="input input-bordered w-full max-w-xs"
+        value={phoneNumber || ''}
+        onChange={handlePhoneNumberChange}
+      />
+      <label className="label">
+        <span className="label-text">Email</span>
+      </label>
+      <input
+        type="email"
+        placeholder="test@example.com"
+        className="input input-bordered w-full max-w-xs"
+        value={email || ''}
+        onChange={handleEmailChange}
+      />
     </div>
   );
 };
