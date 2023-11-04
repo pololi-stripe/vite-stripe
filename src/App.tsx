@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import './App.css';
 import {loadStripe} from '@stripe/stripe-js';
 import {CustomCheckoutProvider} from '@stripe/react-stripe-js';
 import CheckoutPage from './CheckoutPage';
