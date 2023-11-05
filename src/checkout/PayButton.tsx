@@ -1,19 +1,26 @@
+import React from 'react';
+
 import {useCustomCheckout} from '@stripe/react-stripe-js';
 
 const PayButton = () => {
+  const [loading, setLoading] = React.useState(false);
   const {confirm, canConfirm} = useCustomCheckout();
 
-  const handleConfirm = () =>
-    confirm().then(
-      () => (window.location.href = `${window.location.origin}/success`)
-    );
+  const handleConfirm = () => {
+    setLoading(true);
+    confirm().then(() => {
+      setLoading(false);
+      window.location.href = `${window.location.origin}/success`;
+    });
+  };
+
   return (
     <button
-      disabled={!canConfirm}
+      disabled={!canConfirm || loading}
       onClick={handleConfirm}
-      className="btn btn-wide btn-primary"
+      className={`btn btn-wide btn-primary ${loading ? 'btn-disabled' : ''}`}
     >
-      Pay
+      {loading ? 'Processing...' : 'Pay'}
     </button>
   );
 };
