@@ -29,7 +29,7 @@ const getCachedSession = async () => {
 app.post('/checkout', async (_, res: Response) => {
   const cachedSession = await getCachedSession();
   if (cachedSession) {
-    res.send({clientSecret: cachedSession.client_secret});
+    res.send({clientSecret: cachedSession?.client_secret});
   } else {
     const checkout = await stripe.checkout.sessions.create({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -72,13 +72,13 @@ app.post('/checkout', async (_, res: Response) => {
           },
         },
       ],
-      automatic_tax: {enabled: true},
+      // automatic_tax: {enabled: true},
       phone_number_collection: {enabled: true},
       mode: 'payment',
       allow_promotion_codes: true,
       return_url: 'http://localhost:5173/success',
-      shipping_address_collection: {allowed_countries: ['CA', 'US']},
-      billing_address_collection: 'required',
+      // shipping_address_collection: {allowed_countries: ['CA', 'US']},
+      // billing_address_collection: 'required',
       shipping_options: [
         {
           shipping_rate_data: {

@@ -26,7 +26,7 @@ const Loading = () => {
 };
 
 const stripe = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY as string, {
-  betas: ['custom_checkout_beta_1'],
+  betas: ['custom_checkout_beta_2'],
 });
 
 function App() {

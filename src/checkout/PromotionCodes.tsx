@@ -20,6 +20,8 @@ const PromotionCodes = () => {
     removePromotionCode();
   };
 
+  const {discountAmounts} = useCustomCheckout();
+
   return (
     <div className="space-y-2">
       <input
@@ -29,6 +31,14 @@ const PromotionCodes = () => {
         className="input input-bordered w-full max-w-xs"
         placeholder="Enter code"
       />
+
+      {discountAmounts?.map((discount) => (
+        <div key={discount.displayName} className="flex justify-between">
+          <span className="bg-orange-300 px-2 py-1">
+            {discount.promotionCode}
+          </span>
+        </div>
+      ))}
 
       <div className="flex justify-end space-x-2">
         <button
