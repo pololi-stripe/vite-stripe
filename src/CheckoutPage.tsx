@@ -54,12 +54,12 @@ const CheckoutPage = () => {
             </div>
           </div> */}
 
-          <div className="card bg-base-200">
+          {/* <div className="card bg-base-200">
             <div className="card-body">
               <h3 className="card-title">Billing address</h3>
               <AddressElement options={{mode: 'billing'}} />
             </div>
-          </div>
+          </div> */}
 
           <div className="card bg-base-200">
             <div className="card-body">
