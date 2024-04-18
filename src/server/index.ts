@@ -4,6 +4,7 @@ import path from 'path';
 import Stripe from 'stripe';
 
 export const app = express();
+app.use(express.json());
 
 const lineItems = [
   {
@@ -143,6 +144,60 @@ app.get('/api/test', (_, res) => res.json({greeting: 'test, world!'}));
 
 app.get('/success', (_, res) => {
   res.sendFile(path.join(process.cwd(), '/success.html'));
+});
+
+
+const CUSTOMER_ID = 'cus_PhJjWwUJ01uPaN';
+
+app.post('/create-customer-session', async (_, res) => {
+  const customer = await stripe.customers.retrieve(CUSTOMER_ID);
+
+  if (customer.deleted) {
+    res.json({customer_session_client_secret: null})
+  } else {
+
+    const customerSession = await stripe.customerSessions.create({
+      customer: customer.id,
+      components: {
+        payment_element: {
+          enabled: true,
+          features: {
+            payment_method_save: 'enabled',
+            payment_method_update: 'enabled',
+            payment_method_set_as_default: 'enabled',
+            payment_method_remove: 'disabled',
+          },
+        },
+      },
+    });
+
+    res.json({customer_session_client_secret: customerSession.client_secret})
+  }
+});
+
+app.post('/create-confirm-intent', async (req, res) => {
+  try {
+    console.log('req.body', req.body)
+    const intent = await stripe.paymentIntents.create({
+      confirm: true,
+      amount: 1099,
+      currency: 'usd',
+      // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+      automatic_payment_methods: {enabled: true},
+      confirmation_token: req.body.confirmationTokenId,
+      customer: CUSTOMER_ID,
+      payment_method_options: {
+        card: {
+          require_cvc_recollection: true,
+        }
+      },
+      return_url: 'http://localhost:5173/success',
+    });
+    res.json({client_secret: intent.client_secret});
+  } catch (error) {
+    console.log('error', error);
+    res.status(400).json({error});
+  }
 });
 
 if (!process.env['VITE']) {
